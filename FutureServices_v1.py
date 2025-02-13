@@ -12,7 +12,7 @@ Final_Output =arcpy.GetParameterAsText(0)
 AOI=arcpy.GetParameterAsText(1)
 Dwg_Output=Final_Output + "\Future_Services_" + today + ".DWG"
 
-mxd=arcpy.mapping.MapDocument(r"Z:\SURVEY DATA\CAD GROUP\6-FUTURE SERVICES\Future_Services.mxd")
+mxd=arcpy.mapping.MapDocument(r"C:\Users\skannan\Future_Services.mxd")
 df=arcpy.mapping.ListDataFrames(mxd)[0]
 lay_list=arcpy.mapping.ListLayers(mxd,"",df)
 now=datetime.datetime.now()
