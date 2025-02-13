@@ -1,39 +1,34 @@
 import arcpy
-import pythonaddins
 import xlwt
-arcpy.env.workspace= r'Z:\IMP NK\AERIAL SURVEY 2019 COMPILATION\Bahra Photogrammetry Data\Bahra.gdb'
-excelPath = "Z:\IMP NK\AERIAL SURVEY 2019 COMPILATION\Bahra Photogrammetry Data\Featureclasscounts.xls"
-datasetList = arcpy.ListDatasets("*", "Feature")
-#For Excel sheet
-book = xlwt.Workbook(encoding="utf-8")
-sheet1 = book.add_sheet("Sheet 1")
-listFCName = []
-listFCount = []
+import os
 
-for dataset in datasetList:
-        #print dataset
-        fcList = arcpy.ListFeatureClasses("*","",dataset)
-        fcList.sort()
-        for fc in fcList:
-            count=arcpy.GetCount_management(fc)
-            #print fc+":"+str(count)
-            listFCName.append(str(fc))
-            listFCount.append(str(count))
+# Path to the file geodatabase
+file_geodatabase = r"C:\Users\skannan\featurecounts.gdb"
 
-print "Writing to Sheet...."
+# Create a new Excel workbook
+workbook = xlwt.Workbook()
+sheet = workbook.add_sheet('Feature Counts_Point')
 
-sheet1.write(0,0, "Feature Class Name") #Row=0, Column=1
-sheet1.write(0,1, "Feature Count") #Row=0, Column=1
+# Header row
+sheet.write(0, 0, 'Feature Class')
+sheet.write(0, 1, 'Feature Count')
 
-totRows = len(listFCName)
-startRow = 0
+# Function to count features and write to Excel
+def count_and_write_feature_count(feature_class, row):
+    count = arcpy.GetCount_management(feature_class)[0]
+    sheet.write(row, 0, feature_class)
+    sheet.write(row, 1, int(count))
 
-for fNm in listFCName:
-        #print("{0} = {1}".format(listFCName[startRow], listFCount[startRow]) )
-        if startRow < totRows:
-                sheet1.write((startRow+1),0, listFCName[startRow])
-                sheet1.write((startRow+1),1, listFCount[startRow])
-        startRow = startRow+1
-book.save(excelPath)
-print "Printed all the feature classes..."
+# Iterate through feature classes and count features
+row_index = 1
+for dirpath, dirnames, filenames in arcpy.da.Walk(file_geodatabase, datatype="FeatureClass"):
+    for filename in filenames:
+        feature_class = os.path.join(dirpath, filename)
+        count_and_write_feature_count(feature_class, row_index)
+        row_index += 1
 
+# Save Excel workbook
+excel_filename = 'feature_counts_Polyline.xls'
+workbook.save(excel_filename)
+
+print(f"Feature counts written to '{excel_filename}'")
