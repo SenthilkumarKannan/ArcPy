@@ -58,8 +58,8 @@ def check_duplicates_in_gdb(gdb_path, target_gdb):
     return duplicates
 
 # Define paths for geodatabases
-gdb_path = r"C:\Senthil\13-ConversionWK\4-TotalCAD_08012025\Points_deltas_08012025.gdb"
-target_gdb = r"C:\Senthil\13-ConversionWK\4-TotalCAD_08012025\Dup_1.gdb"
+gdb_path = r"C:\Senthil\FGDB.gdb"
+target_gdb = r"C:\Senthil\Dup_1.gdb"
 
 # Run duplicate check and export process
 duplicate_feature_classes = check_duplicates_in_gdb(gdb_path, target_gdb)
